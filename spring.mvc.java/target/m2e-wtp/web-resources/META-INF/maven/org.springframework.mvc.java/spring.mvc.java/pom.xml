@@ -14,6 +14,7 @@
     <mavenWarPlugin>2.6</mavenWarPlugin>
     <springframeworkVersion>5.0.4.RELEASE</springframeworkVersion>
     <jackson.version>2.9.4</jackson.version>
+    <apache.log4.version>2.11.0</apache.log4.version>
   </properties>
 
   <dependencies>
@@ -48,7 +49,14 @@
 	    <artifactId>javax.annotation-api</artifactId>
 	    <version>1.3.2</version>
 	</dependency>
-
+	
+	<!-- spring loaded -->
+	<dependency>
+	    <groupId>org.springframework</groupId>
+	    <artifactId>springloaded</artifactId>
+	    <version>1.2.8.RELEASE</version>
+	</dependency>
+	
 	<dependency>
 		<groupId>javax.servlet.jsp</groupId>
 		<artifactId>javax.servlet.jsp-api</artifactId>
@@ -79,6 +87,18 @@
 		<groupId>io.lettuce</groupId>
 		<artifactId>lettuce-core</artifactId>
 		<version>5.0.2.RELEASE</version>
+	</dependency>
+	
+	<!-- apache log4j2 -->
+	<dependency>
+	  <groupId>org.apache.logging.log4j</groupId>
+	  <artifactId>log4j-api</artifactId>
+	  <version>${apache.log4.version}</version>
+	</dependency>
+	<dependency>
+	  <groupId>org.apache.logging.log4j</groupId>
+	  <artifactId>log4j-core</artifactId>
+	  <version>${apache.log4.version}</version>
 	</dependency>
 	
 	<!-- spring security -->

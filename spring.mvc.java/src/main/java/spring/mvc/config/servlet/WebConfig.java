@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.CommonAnnotationBeanPostProcessor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.format.datetime.DateFormatter;
 import org.springframework.format.datetime.DateFormatterRegistrar;
 import org.springframework.format.number.NumberFormatAnnotationFormatterFactory;
@@ -13,6 +14,7 @@ import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.http.CacheControl;
 import org.springframework.http.MediaType;
+import org.springframework.web.servlet.config.annotation.AsyncSupportConfigurer;
 import org.springframework.web.servlet.config.annotation.ContentNegotiationConfigurer;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
@@ -30,6 +32,13 @@ import spring.mvc.config.interceptor.LocaleInterceptor;
 @ComponentScan(basePackages="spring.mvc.web")
 public class WebConfig implements WebMvcConfigurer {
 	
+	
+	@Override
+	public void configureAsyncSupport(AsyncSupportConfigurer configurer) {
+		configurer.setDefaultTimeout(10);
+		WebMvcConfigurer.super.configureAsyncSupport(configurer);
+	}
+	
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/resources/**")
@@ -39,7 +48,7 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		configurer.mediaType("json", MediaType.APPLICATION_JSON_UTF8);
+		configurer.mediaType("json", MediaType.APPLICATION_OCTET_STREAM);
 	}
 	
 	@Override
@@ -49,7 +58,10 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(new LocaleInterceptor());
+		LocaleInterceptor localeInterceptor = new LocaleInterceptor();
+		localeInterceptor.setParamName("lang");
+		
+		registry.addInterceptor(localeInterceptor);
 	}
 	
 	@Override
@@ -63,7 +75,10 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	
     @Bean
+    @Order(1)
     public FormattingConversionService conversionService() {
+    	
+    	System.out.println("conversionService");
 
         // Use the DefaultFormattingConversionService but do not register defaults
         DefaultFormattingConversionService conversionService = new DefaultFormattingConversionService(false);
@@ -80,7 +95,9 @@ public class WebConfig implements WebMvcConfigurer {
     }
     
     @Bean
+    @Order(20000)
     public CommonAnnotationBeanPostProcessor commonAnnotationBeanPostProcessor() {
+    	System.out.println("commonAnnotationBeanPostProcessor");
     	return new CommonAnnotationBeanPostProcessor(); 
     }
     
